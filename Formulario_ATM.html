@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulario de Solicitudes</title>
+    <script>
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyesVdVHTxyGD-EJ5vY8pYpJCTVsHKuta2um6qZ9F7Nire0FGc7l4nUtO-h2Rxd8zr/exec';
+
+      function cargarDatos(sheetName) {
+        console.log("Cargando datos de la hoja:", sheetName);
+        fetch(SCRIPT_URL + '?sheetName=' + sheetName)
+          .then(response => response.json())
+          .then(data => {
+            console.log("Datos recibidos:", data); // Ver los datos en la consola
+            alert('Datos recibidos y guardados en la hoja "Log".');
+          })
+          .catch(error => console.error('Error al cargar los datos:', error));
+      }
+
+      window.onload = function() {
+        document.getElementById('tipoSolicitud').onchange = function() {
+          if (this.value === 'Transporte') {
+            cargarDatos('Transporte'); // Llamar a cargar datos de la hoja "Transporte"
+          }
+        };
+      };
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="tipoSolicitud">Tipo de Solicitud:</label>
+      <select id="tipoSolicitud" name="tipoSolicitud">
+        <option value="">Seleccione</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Solicitud de Cambio">Solicitud de Cambio</option>
+        <option value="Servicio a ATM">Servicio a ATM</option>
+      </select>
+
+      <button type="button" onclick="cargarDatos('Transporte')">Obtener Datos</button>
+    </form>
+  </body>
+</html>
