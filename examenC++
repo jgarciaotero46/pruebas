@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+        }
+        h2 { text-align: center; }
+        .question { margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #ccc; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; font-weight: bold; }
+        .answer { display: none; margin-top: 5px; }
+        button { padding: 10px; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Cuestionario de C++</h2>
+    <p>Selecciona tu respuesta y verás inmediatamente si es correcta.</p>
+
+    <div id="quiz"></div>
+    
+    <script>
+        // Preguntas y respuestas
+        const preguntas = [
+            { pregunta: "¿Cuál es la extensión de un archivo de código C++?", opciones: [".cpp", ".java", ".py"], correcta: 0 },
+            { pregunta: "¿Cuál es la función principal en C++?", opciones: ["start()", "main()", "run()"], correcta: 1 },
+            { pregunta: "¿Qué comando imprime en pantalla?", opciones: ["cout <<", "print()", "echo"], correcta: 0 },
+            { pregunta: "¿Qué operador se usa para asignar un valor?", opciones: ["=", "==", ":="], correcta: 0 },
+            { pregunta: "¿Cómo se declara una variable entera?", opciones: ["int x;", "var x;", "float x;"], correcta: 0 },
+            { pregunta: "¿Cuál de estos es un tipo de dato en C++?", opciones: ["integer", "int", "number"], correcta: 1 },
+            { pregunta: "¿Cómo se inicia un comentario en una sola línea en C++?", opciones: ["/* comentario */", "// comentario", "# comentario"], correcta: 1 },
+            { pregunta: "¿Cuál es la salida de: int x = 5; cout << x;", opciones: ["x", "5", "Error"], correcta: 1 },
+            { pregunta: "¿Qué librería se usa para entrada/salida en C++?", opciones: ["iostream", "stdlib", "string"], correcta: 0 },
+            { pregunta: "¿Cómo se finaliza una línea de código en C++?", opciones: [";", ".", ","], correcta: 0 },
+            { pregunta: "¿Cómo se declara un puntero en C++?", opciones: ["int *p;", "pointer p;", "ptr<int> p;"], correcta: 0 },
+            { pregunta: "¿Qué estructura de control ejecuta código si la condición es verdadera?", opciones: ["if", "while", "for"], correcta: 0 },
+            { pregunta: "¿Cómo se declara una constante en C++?", opciones: ["const int x = 5;", "let x = 5;", "define x = 5;"], correcta: 0 },
+            { pregunta: "¿Qué tipo de dato almacena caracteres?", opciones: ["char", "string", "text"], correcta: 0 },
+            { pregunta: "¿Qué operador se usa para incrementar en 1 una variable?", opciones: ["x+1", "x++", "+x"], correcta: 1 },
+            { pregunta: "¿Cuál de estos es un bucle en C++?", opciones: ["repeat", "do-while", "foreach"], correcta: 1 },
+            { pregunta: "¿Cómo se declara un arreglo en C++?", opciones: ["array<int> arr;", "int arr[];", "arr<int>"], correcta: 1 },
+            { pregunta: "¿Cuál es el operador lógico AND en C++?", opciones: ["&&", "||", "&"], correcta: 0 },
+            { pregunta: "¿Cómo se define una función en C++?", opciones: ["void miFuncion()", "define miFuncion()", "fn miFuncion()"], correcta: 0 },
+            { pregunta: "¿Qué se usa para manejar errores en C++?", opciones: ["try-catch", "if-else", "error-handler"], correcta: 0 }
+        ];
+
+        function generarCuestionario() {
+            let quizDiv = document.getElementById("quiz");
+            preguntas.forEach((item, index) => {
+                let preguntaDiv = document.createElement("div");
+                preguntaDiv.classList.add("question");
+                preguntaDiv.innerHTML = `<p>${index + 1}. ${item.pregunta}</p>`;
+
+                item.opciones.forEach((opcion, i) => {
+                    let label = document.createElement("label");
+                    let radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.name = "q" + index;
+                    radio.value = i;
+                    radio.onclick = () => verificarRespuesta(index, i);
+                    
+                    label.appendChild(radio);
+                    label.append(` ${opcion}`);
+                    preguntaDiv.appendChild(label);
+                    preguntaDiv.appendChild(document.createElement("br"));
+                });
+
+                let respuestaDiv = document.createElement("p");
+                respuestaDiv.classList.add("answer");
+                respuestaDiv.id = "respuesta" + index;
+                preguntaDiv.appendChild(respuestaDiv);
+
+                quizDiv.appendChild(preguntaDiv);
+            });
+        }
+
+        function verificarRespuesta(preguntaIndex, seleccionada) {
+            let correcta = preguntas[preguntaIndex].correcta;
+            let respuestaDiv = document.getElementById("respuesta" + preguntaIndex);
+
+            if (seleccionada == correcta) {
+                respuestaDiv.innerHTML = "✅ Correcto";
+                respuestaDiv.className = "correct";
+            } else {
+                respuestaDiv.innerHTML = `❌ Incorrecto. La respuesta correcta es: "${preguntas[preguntaIndex].opciones[correcta]}"`;
+                respuestaDiv.className = "incorrect";
+            }
+
+            respuestaDiv.style.display = "block";
+        }
+
+        generarCuestionario();
+    </script>
+
+</body>
+</html>
