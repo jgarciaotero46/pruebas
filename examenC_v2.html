@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Examen de C++</title>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .question { margin-bottom: 20px; }
+            .feedback { font-weight: bold; }
+            .correct { color: green; }
+            .incorrect { color: red; }
+            
+            /* Nuevo CSS para formato de código */
+            pre {
+                background-color: #f4f4f4;
+                padding: 10px;
+                border-radius: 5px;
+                font-family: monospace;
+                white-space: pre-wrap;
+            }
+    
+            .code-question {
+                font-family: monospace;
+                white-space: pre;
+                background-color: #f4f4f4;
+                padding: 15px;
+                margin: 10px 0;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+    <h1>Examen de C++</h1>
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" onclick="calcularResultado()">Finalizar Examen</button>
+    </form>
+    <p id="resultado"></p>
+
+    <script>
+        const preguntas = [
+    {
+        pregunta: "¿Qué comando se usa para leer entrada del usuario?",
+        opciones: ["cin >>", "read()", "input()"],
+        correcta: 0,
+        explicacion: "'cin >>' es el comando para leer entrada del usuario en C++."
+    },
+    {
+        pregunta: "¿Cómo se escribe una condición if básica?",
+        opciones: ["if (condicion) {}", "if condicion then", "if = condicion"],
+        correcta: 0,
+        explicacion: "La sintaxis correcta es 'if (condicion) {}' con paréntesis y llaves."
+    },
+    {
+        pregunta: "¿Qué operador se usa para comparar si dos valores son iguales?",
+        opciones: ["=", "==", "==="],
+        correcta: 1,
+        explicacion: "El operador '==' se usa para comparar igualdad, mientras que '=' es para asignación."
+    },
+    {
+        pregunta: "¿Cómo se declara una constante en C++?",
+        opciones: ["const int x = 5;", "constant x = 5;", "define x = 5;"],
+        correcta: 0,
+        explicacion: "Se usa 'const' seguido del tipo de dato para declarar constantes."
+    },
+    {
+        pregunta: "¿Qué símbolo se usa para terminar una instrucción en C++?",
+        opciones: [".", ",", ";"],
+        correcta: 2,
+        explicacion: "Cada instrucción en C++ debe terminar con punto y coma (;)."
+    },
+    {
+        pregunta: "¿Cuál es el operador de multiplicación?",
+        opciones: ["x", "*", "×"],
+        correcta: 1,
+        explicacion: "El asterisco (*) es el operador de multiplicación en C++."
+    },
+    {
+        pregunta: "¿Cómo se escribe el operador OR?",
+        opciones: ["||", "OR", "&&"],
+        correcta: 0,
+        explicacion: "El operador OR se escribe como '||' en C++."
+    },
+    {
+        pregunta: "¿Qué tipo de dato se usa para valores verdadero/falso?",
+        opciones: ["bool", "boolean", "logical"],
+        correcta: 0,
+        explicacion: "'bool' es el tipo de dato para valores booleanos (true/false)."
+    },
+    {
+        pregunta: "¿Cómo se escribe la fórmula cuadrática -b + √(b²-4ac)?",
+        opciones: ["-b + sqrt(pow(b,2)-4*a*c)", "-b + raiz(b^2-4ac)", "sqrt(-b + b*b-4ac)"],
+        correcta: 0,
+        explicacion: "Se usa 'sqrt()' para raíz cuadrada y 'pow(b,2)' o 'b*b' para elevar al cuadrado."
+    },
+    {
+        pregunta: "¿Qué librería se necesita para usar funciones matemáticas como sqrt()?",
+        opciones: ["math.h", "cmath", "mathlib"],
+        correcta: 1,
+        explicacion: "'cmath' es la librería para funciones matemáticas en C++."
+    },
+    {
+        pregunta: "¿Cómo se declara una variable decimal con doble precisión?",
+        opciones: ["decimal x;", "double x;", "float x;"],
+        correcta: 1,
+        explicacion: "'double' se usa para números decimales con mayor precisión que float."
+    },
+    {
+        pregunta: "¿Qué valor se usa para representar 'falso'?",
+        opciones: ["FALSE", "0", "false"],
+        correcta: 2,
+        explicacion: "'false' es la palabra clave correcta para el valor booleano falso."
+    },
+    {
+        pregunta: "¿Cómo se escribe el else if en C++?",
+        opciones: ["elseif", "else if", "elsif"],
+        correcta: 1,
+        explicacion: "'else if' se escribe separado en C++."
+    },
+    {
+        pregunta: "¿Qué operador se usa para 'diferente de'?",
+        opciones: ["<>", "!=", "/="],
+        correcta: 1,
+        explicacion: "El operador '!=' significa 'diferente de' en C++."
+    },
+    {
+        pregunta: "¿Cómo se obtiene el residuo de una división?",
+        opciones: ["rem", "%", "mod"],
+        correcta: 1,
+        explicacion: "El operador '%' calcula el residuo de una división."
+    },
+    {
+        pregunta: "¿Qué extensión tienen los archivos fuente de C++?",
+        opciones: [".cpp", ".c++", ".cx"],
+        correcta: 0,
+        explicacion: "'.cpp' es la extensión estándar para archivos de C++."
+    },
+    {
+        pregunta: "¿Cómo se incrementa una variable en 1?",
+        opciones: ["x++", "x+=1", "Ambas son correctas"],
+        correcta: 2,
+        explicacion: "Tanto 'x++' como 'x+=1' incrementan una variable en 1."
+    },
+    {
+        pregunta: "¿Qué hace 'endl'?",
+        opciones: ["Termina el programa", "Inserta un salto de línea", "Borra la pantalla"],
+        correcta: 1,
+        explicacion: "'endl' inserta un salto de línea y limpia el buffer."
+    },
+    {
+        pregunta: "¿Cómo se escribe el operador AND?",
+        opciones: ["AND", "&&", "&"],
+        correcta: 1,
+        explicacion: "El operador AND se escribe como '&&' en C++."
+    },
+    {
+        pregunta: "¿Qué función se usa para redondear números?",
+        opciones: ["round()", "ceil()", "floor()"],
+        correcta: 0,
+        explicacion: "'round()' redondea al entero más cercano."
+    },
+    {
+        pregunta: "¿Cómo se declara una variable de texto?",
+        opciones: ["text x;", "string x;", "char x;"],
+        correcta: 1,
+        explicacion: "'string' es el tipo de dato para cadenas de texto."
+    },
+    {
+        pregunta: "¿Qué librería se necesita para usar string?",
+        opciones: ["string", "cstring", "string.h"],
+        correcta: 0,
+        explicacion: "La librería 'string' es necesaria para usar el tipo string."
+    },
+    {
+        pregunta: "¿Cómo se escribe una condición 'si no'?",
+        opciones: ["otherwise", "else", "elsif"],
+        correcta: 1,
+        explicacion: "'else' se usa para el caso contrario en una condición."
+    },
+    {
+        pregunta: "¿Qué valor devuelve main() si todo está correcto?",
+        opciones: ["1", "0", "-1"],
+        correcta: 1,
+        explicacion: "main() devuelve 0 cuando el programa termina correctamente."
+    },
+    {
+    pregunta: "¿Cuál es la estructura básica de un programa C++?",
+    opciones: ["Solo main()", "include y main()", "Solo includes"],
+    correcta: 1,
+    explicacion: "Un programa C++ necesita al menos las inclusiones (includes) y la función main()."
+},
+{
+    pregunta: "¿Para qué sirve 'using namespace std;'?",
+    opciones: ["Es decorativo", "Evita escribir std::", "Crea un espacio"],
+    correcta: 1,
+    explicacion: "Permite usar elementos de la biblioteca estándar sin escribir std:: antes."
+},
+{
+    pregunta: "¿Qué hace system('pause')?",
+    opciones: ["Cierra el programa", "Pausa la ejecución", "Limpia la pantalla"],
+    correcta: 1,
+    explicacion: "Pausa la ejecución del programa hasta que el usuario presione una tecla."
+},
+{
+    pregunta: "¿Qué significa el mensaje 'Build successful'?",
+    opciones: ["Hay errores", "Compiló correctamente", "Falta código"],
+    correcta: 1,
+    explicacion: "Indica que el programa se compiló sin errores y está listo para ejecutarse."
+},
+{
+    pregunta: "¿Qué es un error de sintaxis?",
+    opciones: ["Error de lógica", "Error de escritura del código", "Error de memoria"],
+    correcta: 1,
+    explicacion: "Es un error en la escritura del código que viola las reglas del lenguaje."
+},
+{
+    pregunta: "¿Para qué sirve el punto de ruptura (breakpoint)?",
+    opciones: ["Romper el código", "Depurar el programa", "Terminar la ejecución"],
+    correcta: 1,
+    explicacion: "Permite pausar la ejecución en un punto específico para depurar el programa."
+},
+// Add these new questions to your existing preguntas array:
+
+{
+    pregunta: `<pre>Completa el código: 
+
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int num1, num2, suma;
+    cout << "Ingrese dos numeros: ";
+    cin >> _____ >> _____;
+    suma = num1 + num2;
+    cout << "La suma es: " << _____;
+    return 0;
+}</pre>`,
+    opciones: ["num1, num2, num1", "num1, num2, suma", "x, y, suma", "a, b, suma"],
+    correcta: 1,
+    explicacion: "Se debe usar 'num1, num2' para leer los valores y 'suma' para mostrar el resultado."
+},
+
+{
+    pregunta: `<pre>¿Cuál es el valor de x después de ejecutar el siguiente código?
+
+int x = 5;
+x = x + 2;</pre>`,
+    opciones: ["2", "5", "7", "10"],
+    correcta: 2,
+    explicacion: "x primero vale 5 y luego se le suma 2, resultando en 7."
+},
+
+{
+    pregunta: "¿Cuál es la función principal en un programa en C++?",
+    opciones: ["start()", "run()", "main()", "program()"],
+    correcta: 2,
+    explicacion: "main() es la función principal donde comienza la ejecución de un programa C++."
+},
+{
+    pregunta: "Verdadero o Falso: C++ es un lenguaje de programación orientado a objetos.",
+    opciones: ["Verdadero", "Falso"],
+    correcta: 0,
+    explicacion: "C++ es un lenguaje que soporta programación orientada a objetos, entre otros paradigmas."
+},
+{
+    pregunta: "Verdadero o Falso: La instrucción cin >> se usa para imprimir texto en la pantalla.",
+    opciones: ["Verdadero", "Falso"],
+    correcta: 1,
+    explicacion: "Falso, cin >> se usa para leer entrada del usuario, cout << es para imprimir."
+},
+{
+    pregunta: "Verdadero o Falso: int se usa para almacenar números decimales.",
+    opciones: ["Verdadero", "Falso"],
+    correcta: 1,
+    explicacion: "Falso, int es para números enteros. Para decimales se usa float o double."
+}
+
+ 
+];
+    
+
+        const questionContainer = document.getElementById("questions");
+
+        preguntas.forEach((q, index) => {
+            let div = document.createElement("div");
+            div.classList.add("question");
+            div.innerHTML = `<p>${index + 1}. ${q.pregunta}</p>`;
+            q.opciones.forEach((opcion, i) => {
+                div.innerHTML += `<input type='radio' name='q${index}' value='${i}' onclick='validarRespuesta(${index}, ${i})'> ${opcion}<br>`;
+            });
+            div.innerHTML += `<p class='feedback' id='feedback${index}'></p>`;
+            questionContainer.appendChild(div);
+        });
+
+        function validarRespuesta(index, seleccion) {
+            let feedback = document.getElementById(`feedback${index}`);
+            if (seleccion === preguntas[index].correcta) {
+                feedback.innerHTML = "Correcto! " + preguntas[index].explicacion;
+                feedback.classList.add("correct");
+                feedback.classList.remove("incorrect");
+            } else {
+                feedback.innerHTML = "Incorrecto! " + preguntas[index].explicacion;
+                feedback.classList.add("incorrect");
+                feedback.classList.remove("correct");
+            }
+        }
+
+        function calcularResultado() {
+    let correctas = 0;
+    preguntas.forEach((q, index) => {
+        let respuestas = document.getElementsByName(`q${index}`);
+        respuestas.forEach((respuesta) => {
+            if (respuesta.checked && parseInt(respuesta.value) === q.correcta) {
+                correctas++;
+            }
+        });
+    });
+    
+    let porcentaje = (correctas / preguntas.length) * 100;
+    
+    document.getElementById("resultado").innerHTML = `
+        Resultados del examen:<br>
+        - Respuestas correctas: ${correctas} de ${preguntas.length}<br>
+        - Porcentaje de aciertos: ${porcentaje.toFixed(2)}%<br>
+        ${porcentaje >= 60 ? '<span style="color: green">¡Aprobado!</span>' : '<span style="color: red">No aprobado</span>'}
+    `;
+}
+
+    </script>
+</body>
+</html>
+
+
