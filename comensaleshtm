@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .comensal-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Formulario de Reserva</h2>
+        <form id="reservaForm">
+            <label>Nombre y Apellido:</label>
+            <input type="text" name="nombre_contacto" required>
+            <label>Teléfono:</label>
+            <input type="tel" name="telefono" required>
+            <label>Correo Electrónico:</label>
+            <input type="email" name="email" required>
+            <label>Número de Comensales:</label>
+            <input type="number" name="comensales" id="numComensales" min="1" required>
+            <label>Fecha de Reserva:</label>
+            <input type="date" name="fecha_reserva" required>
+            
+            <div id="comensales"></div>
+            
+            <label>
+                <input type="checkbox" name="terminos" required>
+                He leído y acepto los términos y condiciones
+            </label>
+            <div class="button-container">
+                <button type="submit">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('numComensales').addEventListener('change', function() {
+            const comensalesDiv = document.getElementById('comensales');
+            comensalesDiv.innerHTML = '';
+            let num = parseInt(this.value);
+            for (let i = 0; i < num; i++) {
+                const div = document.createElement('div');
+                div.classList.add('comensal-container');
+                div.innerHTML = `
+                    <h4>Comensal ${i + 1}</h4>
+                    <label>Nombre y Apellido:</label>
+                    <input type="text" name="nombre_comensal[]" required>
+                    <label>Alergias o Restricciones Alimenticias:</label>
+                    <input type="text" name="alergias[]">
+                    <label>Idioma:</label>
+                    <select name="idioma[]" required>
+                        <option value="Español">Español</option>
+                        <option value="Inglés">Inglés</option>
+                        <option value="Francés">Francés</option>
+                        <option value="Alemán">Alemán</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <label>Experiencia:</label>
+                    <input type="text" name="experiencia[]" required>
+                    <label>Alcohol:</label>
+                    <select name="alcohol[]" required>
+                        <option value="Sí">Sí</option>
+                        <option value="No">No</option>
+                        <option value="Prefiero no responder">Prefiero no responder</option>
+                    </select>
+                `;
+                comensalesDiv.appendChild(div);
+            }
+        });
+
+        document.getElementById('reservaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let mensaje = "Confirme los datos de su reserva:\n\n";
+            const formData = new FormData(this);
+            for (const [key, value] of formData.entries()) {
+                mensaje += `${key}: ${value}\n`;
+            }
+            
+            if (confirm(mensaje + "\n\n¿Desea enviar la reserva?")) {
+                fetch('procesar_reserva.php', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.text())
+                .then(data => alert('Reserva enviada correctamente'))
+                .catch(error => alert('Error al enviar la reserva'));
+            }
+        });
+    </script>
+</body>
+</html>
